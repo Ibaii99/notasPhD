@@ -2,7 +2,7 @@
 \usepackage[utf8]{inputenc}
 
 \usepackage{cite}
-\usepackage{natbib}
+%\usepackage{natbib}
 
 \usepackage[hyphens]{url}
 \usepackage[hidelinks]{hyperref}
@@ -22,7 +22,38 @@
 
 \end{abstract}
 
-\section{}
+\section{Conclusiones de artículos leidos e ideas a implementar}
+
+\subsection{Estrategia para la selección del dataset y su procesado}
+
+\subsection{Estrategia de selección de modelos}
+Para elegir el modelo que más se adapta a este caso de uso se han generado tñopicos con diferentes técnicas utilizadas en la literatura para extraer los tópicos inherentes en la colección de textos. Los modelos generados han sido los siguientes:
+\begin{itemize}
+ \item BERTopic
+ \item DTM
+ \item D-ETM
+\end{itemize}
+
+Asumimos que cada tópico debe representar un concepto específico y que cada concepto está definido como las 15 palabras con mayor probabilidad para ese tópico. Observamos la coherencia de los tópicos generados en los últimos 5 años para conocer si la evolución de los tópicos es homogénea y estable. De esta forma podemos saber si los modelos generan modelos que evolucionan progresivamente y representan correctamente la colección de textos para elegir el mejor. Nos basaremos concretamente en las métricas CV y UMass (interpretabilidad y especificidad respectivamente).
+
+\subsection{Análisis del modelo generado}
+
+Para etiquetar los diferentes tópicos hemos decidido tomar las palabras que han sido la top1 del tópico en cualquiera de los espacios temporales. Esta estrategia nos permite definir los tópicos mediante la o las palabras más importantes. Además, para poder medir y comparar la especificidad semántica de los tópicos se ha decidido utilizar la distancia semántica de las palabras de cada etiqueta. De esta forma, si un tópico es definido por una palabra, este tendría distancia cero y, por ende, sería una etiqueta perfecta. Mientras que, los tópicos que están definidos por una étiqueta con más de una palabra serán más plurales y serán menos específicos.
+
+Sin embargo, mediante un estudio superficial de las etiquetas generadas se ha observado que muchas palabras son tendencias con alta relevancia en un espacio temporal y muy poco en los demás. Esto implica que los tópicos estan formados por tendencias. Por ello, la estrategia de etiquetado ha sido levemente modificada. Ahora, para que una palabra cuente como etiqueta, además de haber sido top1 en cualquier fecha ha de permanecer en el top5 palabras de forma estable durante todas las fechas. Además, si un tópico no cumple con palabras que satisfagan este requisito se asumirá que el tópico es demasiado volátil y no puede ser utilizado para estudiarlo.
+
+Para contabilizar esto también hemos desarrollado una métrica de drop para ponderar la cantidad de tópicos volátiles respecto al total. De esta forma podemos comparar los diferentes modelos creados y cual genera tópicos más estables.
+
+
+Ante los resultados obtenidos y los tópicos tan variados se ha decidido incrementar el número de tópicos para observar si de esta manera se consiguen tópicos más específicos ya que se conoce que esto genera tópicos más concretos(Hay varios trabajos que nos lo confirman y el nuestro también lo demuestra).
+
+
+Observamos que DTM es el modelo que da mejor rendimiento, sin emabrgo entre las top 15 words de los tópicos no aparecen medicamentos. Además, observamos que aparecen el SARS, MERS y el SARS-CoV-2 en el mismo tópico, lo que impide que podamos relacionar los fármacos con cada enfermedad.
+
+
+
+
+\section{Artículos leidos}
 
 Gran parte de los artículos son de autores chinos y tratan del análisis de opiniones. Muchos con financiación estatal china. Además, es un denominador común en las investigaciones aplicar estas técnicas sobre el texto recogido de diferentes redes sociales.
 
@@ -40,11 +71,15 @@ Gran parte de los artículos son de autores chinos y tratan del análisis de opi
 
 
 
-\section{Otros enfoques}
+\subsection{Otros enfoques}
 \cite{Churchill2022}: Estos autores presentaron un dynamic topic-noise discriminator. Proponen el Dynamic Noiseless Latent Dirichlet Allocation, adaptan el topic-noise model a un espacio temporal de las redes sociales, es una adaptación temporal del Noiseless Latent Dirichlet Allocation. Este enfoque no solo propone que un tópico evoluciona a lo largo del tiempo, sino que también asume que un tópico está formado por palbras y ruido. Creando una distribución de ruido. A los de este estudio D-ETM tampoco les genera tópicos de calidad. Estos analizan la evolución del tópico de la vacuna del coronavirus con el corpus del COVID-19 (NO DICE CUAL).
 
 
-\section{Social Media Data}
+\subsection{Colecciones de artículos}
+\cite{Sleeman2021}: Estos autores hacen un estudio muy parecido al que nosotros buscamos pero en otro contexto. Utilizan documentos técnicos sobre una colección de documentos de ciberseguridad. Además, presentan los documentos, los conceptos y los tópicos en gráfos de conocimiento para ayudar a la integración y poder hacer consultas.  ```When we build topic models over time, topics evolve over time based on the documents in the collection at that time point. Our observation is as we increased the number of topics, we saw more granularity among topics. Topics represented more narrow mixtures. We also observed concepts that drop off of one topic and fall into another at various points in time''.
+
+
+\subsection{Social Media Data}
 \cite{Golino2022}: Estos autores analizan los mensajes publicados en redes sociales que instigaron a la opinión pública a desconfiar de los procesos electorales de EEUU en el año 2016. No se pueden extraer cosas muy diferentes a las de otros artículos pero me ha gustado el concepto de que hay cuestiones que influencian la opinión pública. Hacen un análisis de opinión que actualmente no nos interesa pero está bien saber que herramientas han utilizado y como, sobre todo porque los tweets no contienen mucho texto. De hecho, podemos analizar la largura media de un abstract para compararla con un tweet y explicar que puede haber modelos que trabajen mejor con volumenes de datos de menor longitud. En la sección de análisis de datos de diferentes formas (citan algunos enfoques). Crea un modelo de 10 tópicos que es bastante gráfico.
 
 \cite{Ghoorchian2020}: Estos autores crean una solución para aplicar DTM en textos cortos de redes sociales. En teoría utilizan grafos de conocimiento pero como por ahora esto no nos interesa no he profundizado. Sin embargo esta guay la definición que hacen de las técnicas de modelado de tópicos: the goal is to reduce the high-dimensional space of words into a signifi-cantly low-dimensional and semantically rich space of topics (citan un artículo).
