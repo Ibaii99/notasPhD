@@ -1,0 +1,63 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+
+\usepackage{cite}
+\usepackage{natbib}
+
+\usepackage[hyphens]{url}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{breaklinks=true}
+\urlstyle{same}
+
+
+%opening
+\title{}
+\author{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+
+\end{abstract}
+
+\section{}
+
+Gran parte de los artículos son de autores chinos y tratan del análisis de opiniones. Muchos con financiación estatal china. Además, es un denominador común en las investigaciones aplicar estas técnicas sobre el texto recogido de diferentes redes sociales.
+
+\cite{Yao2020}: Estos autores presentan la idea de \textbf{cada tópico tiene una trayectoria definida} como el camino que atraviesa el centroide del tópico a través de los diferentes espacios temporales. Además, definen que un tópico es estático o dinámico, es decir si cambia mucho o poco en el tiempo (porque el cambio es inevitable), en base a la distancia que recorre el tópico. Fijan una distancia máxima por fecha que vale para establecer si un tópico cambia mucho o poco.
+
+\cite{Lee2011}: La trayectoria espacial la definen estos autores (cita del anterior artículo).
+
+\cite{Alazba2022}: Este artículo no me ha gustado nada, parece muy sesgado, simple, los modelos han sido elegidos a dedo y hay muchas cosas hechas a mano. Sin embargo he encontrado algunas cosas interesantes.
+\begin{itemize}
+ \item Definen el tópico trending o dominante como aquel que predomina en la mayoría de artículos. Es decir, teniendo la distribución de tópicos documentos extraen el tóptico que predomina en cada documento, con esto cuentan cuál es el tópico más repetido y ése es.
+ \item Definen los N tópicos más importantes del corpus como los N que más predominan (siguiendo el proceso anterior).
+ \item Para etiquetar los tópicos utilizan el documento más relevante y las top 20 palabras y lo hacen a mano.Asignan nombre basandose en las palabras y lo confirman con el documento.
+ \item Analizan la cantidad de artículos financiados y los tópicos más financiados.
+\end{itemize}
+
+
+
+\section{Otros enfoques}
+\cite{Churchill2022}: Estos autores presentaron un dynamic topic-noise discriminator. Proponen el Dynamic Noiseless Latent Dirichlet Allocation, adaptan el topic-noise model a un espacio temporal de las redes sociales, es una adaptación temporal del Noiseless Latent Dirichlet Allocation. Este enfoque no solo propone que un tópico evoluciona a lo largo del tiempo, sino que también asume que un tópico está formado por palbras y ruido. Creando una distribución de ruido. A los de este estudio D-ETM tampoco les genera tópicos de calidad. Estos analizan la evolución del tópico de la vacuna del coronavirus con el corpus del COVID-19 (NO DICE CUAL).
+
+
+\section{Social Media Data}
+\cite{Golino2022}: Estos autores analizan los mensajes publicados en redes sociales que instigaron a la opinión pública a desconfiar de los procesos electorales de EEUU en el año 2016. No se pueden extraer cosas muy diferentes a las de otros artículos pero me ha gustado el concepto de que hay cuestiones que influencian la opinión pública. Hacen un análisis de opinión que actualmente no nos interesa pero está bien saber que herramientas han utilizado y como, sobre todo porque los tweets no contienen mucho texto. De hecho, podemos analizar la largura media de un abstract para compararla con un tweet y explicar que puede haber modelos que trabajen mejor con volumenes de datos de menor longitud. En la sección de análisis de datos de diferentes formas (citan algunos enfoques). Crea un modelo de 10 tópicos que es bastante gráfico.
+
+\cite{Ghoorchian2020}: Estos autores crean una solución para aplicar DTM en textos cortos de redes sociales. En teoría utilizan grafos de conocimiento pero como por ahora esto no nos interesa no he profundizado. Sin embargo esta guay la definición que hacen de las técnicas de modelado de tópicos: the goal is to reduce the high-dimensional space of words into a signifi-cantly low-dimensional and semantically rich space of topics (citan un artículo).
+
+
+\cite{Tabassum2021}: En este artículo usan los modelos de tópicos para extraer tópicos de los tweets. Sin embargo, los tópicos están definidos por los hastags y los utilizan para definir los tópicos que se van a tratar.
+
+
+
+
+
+\bibliographystyle{unsrtnat}
+\Urlmuskip=0mu plus 1mu
+\bibliography{bibliography.bib}
+
+\end{document}

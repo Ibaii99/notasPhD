@@ -1,0 +1,82 @@
+@article{Yao2020,
+   abstract = {Modern cities are facing critical environmental and social problems that are difficult to solve using conventional planning approaches due to the cities’ magnitude and complexity. Recent developments in sensing technologies and urban computing, however, integrate new data resources and technologies to tackle these challenges. Popular social networking platforms such as Twitter provide new data sources on important events (e.g., cultural activities, political campaigns, accidents, crises) providing rich knowledge about urban systems and human dynamics. This research is intended to develop a method for effectively monitoring important information during such events and helping with planning and policymaking. We use semantically similar and geographically close geo-topics to represent important local events. This research proposes a data-driven system for detecting and tracking the semantic, spatial, and temporal dynamics of these geo-topics, specifically designed for geo-tagged tweets. The system consists of data preprocessing, geo-topic generation, and geo-topic tracking modules. The preprocessing module can remove robotic and semantically trivial texts. In the geo-topic generation module, we use spatial factors to measure the spatial impacts of geo-tagged tweets by applying an exponential decay function to the pairwise distances between tweets. We then improve the dynamic topic model (DTM) by embedding the spatial factors to enable the generation of geo-topics in semantic, spatial, and temporal dimensions simultaneously. The geo-topic tracking module monitors semantic change by detecting changes in certain keywords’ probabilities and the volumes of tweets belonging to different geo-topics. This module also uses radius of gyration and trajectory-pattern mining to track and analyze the movement patterns of geo-topics. We employed the tracking system in three disaster cases in different U.S. cities to track small-scale emergencies and crises. These implementations demonstrated the effectiveness of the system for identifying and tracking geo-topics at fine temporal and geographic scales. The system also has strong potential in creating planning-related analyses for policy makers, improving the situational awareness of the general public, and serving as a basis for urban information systems that contribute to smart, agile, and resilient city developments.},
+   author = {Fang Yao and Yan Wang},
+   doi = {10.1016/J.COMPENVURBSYS.2019.101419},
+   issn = {0198-9715},
+   journal = {Computers, Environment and Urban Systems},
+   keywords = {Dynamic topic model,Emergency management,Geo-topic tracking,Social networking platforms,Urban computing},
+   month = {1},
+   pages = {101419},
+   publisher = {Pergamon},
+   title = {Tracking urban geo-topics based on dynamic topic model},
+   volume = {79},
+   year = {2020},
+}
+
+@book_section{Lee2011,
+   author = {Wang-Chien Lee and John Krumm},
+   city = {New York, NY},
+   doi = {10.1007/978-1-4614-1629-6_1},
+   journal = {Computing with Spatial Trajectories},
+   pages = {3-33},
+   publisher = {Springer New York},
+   title = {Trajectory Preprocessing},
+   year = {2011},
+}
+
+@inproceedings{Alazba2022,
+   abstract = {Discovering trends in research areas is helpful for researchers in finding the recent advances in a field or area of research. In addition, policy makers in universities can utilize this information in decision making. Different factors have direct influence on the growth and evolution of research topics. These include the funding, community interest and national needs. In this paper, we propose an unsupervised Dynamic Topic Modeling approach to discover and analyze the most trending research topics in a set of research areas using a collection of publications from the corresponding research areas. Furthermore, we study the correlation between emerging research trends and the different influencing factors.},
+   author = {Amal Alazba and Leina Abouhagar and Randah Al-Harbi and Hamdi A. Al-Jamimi and Abdullah Sultan and Rabah A. Al-Zaidy},
+   doi = {10.1109/CDMA54072.2022.00031},
+   journal = {Proceedings - 2022 7th International Conference on Data Science and Machine Learning Applications, CDMA 2022},
+   title = {Detection of Research Trends using Dynamic Topic Modeling},
+   year = {2022},
+}
+
+@article{Golino2022,
+   abstract = {<p> The past few years were marked by increased online offensive strategies perpetrated by state and non-state actors to promote their political agenda, sow discord, and question the legitimacy of democratic institutions in the US and Western Europe. In 2016, the US congress identified a list of Russian state-sponsored Twitter accounts that were used to try to divide voters on a wide range of issues. Previous research used latent Dirichlet allocation (LDA) to estimate latent topics in data extracted from these accounts. However, LDA has characteristics that may limit the effectiveness of its use on data from social media: The number of latent topics must be specified by the user, interpretability of the topics can be difficult to achieve, and it does not model short-term temporal dynamics. In the current paper, we propose a new method to estimate latent topics in texts from social media termed <italic>Dynamic Exploratory Graph Analysis</italic> (DynEGA). In a Monte Carlo simulation, we compared the ability of DynEGA and LDA to estimate the number of simulated latent topics. The results show that DynEGA is substantially more accurate than several different LDA algorithms when estimating the number of simulated topics. In an applied example, we performed DynEGA on a large dataset with Twitter posts from state-sponsored right- and left-wing trolls during the 2016 US presidential election. DynEGA revealed topics that were pertinent to several consequential events in the election cycle, demonstrating the coordinated effort of trolls capitalizing on current events in the USA. This example demonstrates the potential power of our approach for revealing temporally relevant information from qualitative text data. </p>},
+   author = {Hudson Golino and Alexander P. Christensen and Robert Moulder and Seohyun Kim and Steven M. Boker},
+   doi = {10.1007/s11336-021-09820-y},
+   issn = {0033-3123},
+   issue = {1},
+   journal = {Psychometrika},
+   month = {3},
+   note = {De este artículo no he podido extraer mucho ya que su alcance no es el nuestro. Sin embargo me ha gustado el término de influenciar la opinión pública y como esto afecta a diferentes cosas.},
+   pages = {156-187},
+   title = {Modeling Latent Topics in Social Media using Dynamic Exploratory Graph Analysis: The Case of the Right-wing and Left-wing Trolls in the 2016 US Elections},
+   volume = {87},
+   year = {2022},
+}
+
+@Article{Ghoorchian2020,
+author={Ghoorchian, Kambiz
+and Sahlgren, Magnus},
+title={GDTM: Graph-based Dynamic Topic Models},
+journal={Progress in Artificial Intelligence},
+year={2020},
+month={Sep},
+day={01},
+volume={9},
+number={3},
+pages={195-207},
+abstract={Dynamic Topic Modeling (DTM) is the ultimate solution for extracting topics from short texts generated in Online Social Networks (OSNs) like Twitter. It requires to be scalable and to be able to account for sparsity and dynamicity of short texts. Current solutions combine probabilistic mixture models like Dirichlet Multinomial or Pitman-Yor Process with approximate inference approaches like Gibbs Sampling and Stochastic Variational Inference to, respectively, account for dynamicity and scalability of DTM. However, these methods basically rely on weak probabilistic language models, which do not account for sparsity in short texts. In addition, their inference is based on iterative optimizations, which have scalability issues when it comes to DTM. We present GDTM, a single-pass graph-based DTM algorithm, to solve the problem. GDTM combines a context-rich and incremental feature representation method with graph partitioning to address scalability and dynamicity and uses a rich language model to account for sparsity. We run multiple experiments over a large-scale Twitter dataset to analyze the accuracy and scalability of GDTM and compare the results with four state-of-the-art models. In result, GDTM outperforms the best model by {\$}{\$}11{\backslash}{\%}{\$}{\$}on accuracy and performs by an order of magnitude faster while creating four times better topic quality over standard evaluation metrics.},
+issn={2192-6360},
+doi={10.1007/s13748-020-00206-2},
+url={https://doi.org/10.1007/s13748-020-00206-2}
+}
+
+@book_section{Tabassum2021,
+   author = {Shazia Tabassum and João Gama and Paulo Azevedo and Luis Teixeira and Carlos Martins and Andre Martins},
+   doi = {10.1007/978-3-030-86230-5_39},
+   pages = {498-509},
+   title = {Dynamic Topic Modeling Using Social Network Analytics},
+   year = {2021},
+}
+
+@book_section{Churchill2022,
+   author = {Rob Churchill and Lisa Singh},
+   doi = {10.1007/978-3-031-05936-0_34},
+   pages = {429-443},
+   title = {Dynamic Topic-Noise Models for Social Media},
+   year = {2022},
+}
