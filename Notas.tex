@@ -9,6 +9,8 @@
 \hypersetup{breaklinks=true}
 \urlstyle{same}
 
+\usepackage{graphicx}
+\usepackage{float}
 
 %opening
 \title{}
@@ -26,29 +28,117 @@
 
 \subsection{Estrategia para la selección del dataset y su procesado}
 
-\subsection{Estrategia de selección de modelos}
-Para elegir el modelo que más se adapta a este caso de uso se han generado tñopicos con diferentes técnicas utilizadas en la literatura para extraer los tópicos inherentes en la colección de textos. Los modelos generados han sido los siguientes:
+The COVID-19 Open Research Dataset (CORD-19) presented by \cite{CORD19} has been used. CORD-19 contains a mixture of articles and preprints on COVID-19 and similar past coronaviruses like SARS and MERS. This resource was developed as an initiative to bring together the machine learning community with experts in the biomedical domain to identify effective treatments and management policies for COVID19. The CORD19 release used was the June 2, 2022 release. This version contains 401,214 documents from different years; the distribution of articles by year can be seen in Figure \ref{fig:Histogram_Available_Papers_Year}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\linewidth]{fig/Histogram_Available_Papers_Year.png}
+    \caption{\centering Distribution of papers in the corpus according to their publication date.}
+    \label{fig:Histogram_Available_Papers_Year}
+\end{figure}
+
+
+The information available for each article is as follows: title, authors, abstract, text, bibliographic entries, internal references (tables, figures or elements within the article with their respective title) and acknowledgements. In addition to this information, the following metadata is also available for each paper: the source from which it originates, its doi, the license of use, its date of publication and the journal in which was published.
+
+Data preprocessing is one of the most critical processes when generating topic models. Is important to remove as much noise as possible while keeping the relevant terms. The more words that are removed, the faster, more efficient and more correct the models will be. For this reason, inspired by the guidelines given by \cite{LDAMethodology}, these steps have been followed for the text preprocessing:
+
+\begin{enumerate}
+    \item Due to the available resources and the large number of articles, it has been decided to work only with the abstracts of the articles. In this way, the computational cost of this phase was reduced. Considering the small number of articles that did not have abstracts, it was decided to discard them and not take them into account. In addition, there are papers in the corpus with publication dates later than the corpus version. Given the distortion that these articles can generate in the models, it has been decided not to take them into account. Thus, only previously published articles are used.
+
+    \item The corpus contains articles in several languages. The main language is English, so it was decided to filter the articles to use only those written in English. The \textit{Langdetect} package was used to identify the language of the texts.
+
+    \item The text has been lowercased in order to group terms by character and not by their format. Observing the content of the abstracts, some DOI links have been found, therefore, and before carrying out the following steps, all the links have been deleted.
+
+    \item All stopwords present in the texts have been removed. The list of stopwords has been extracted from the repository \textit{stopwords-iso}\footnote{https://github.com/stopwords-iso/stopwords-iso}. In this repository, stopwords from different sources have been collected in order to create a list as extensive as possible.
+
+    \item Punctuation characters and all numbers have been removed. For punctuation characters, the list provided by the python package \textit{String} has been used. However, due to the particularity of healthcare texts, single hyphens have not been removed.
+
+    \item A minimum word size criteria has been defined in order to eliminate acronyms and abbreviations which are difficult to interpret and use out of context. To this end, the decision has been taken to eliminate all words with less than 4 letters.
+
+    \item The remaining words after the previous steps are lemmatized. It has been decided to use lemmatization and not stemming because in this way, the final result is more easily interpretable. The \textit{WordNetLemmatizer} from the \textit{Nltk} package has been used for this task.
+
+    \item Due to the size of the corpus, it has been assumed that, on the one hand, there will be words that, due to their high frequency in the documents, are common in the corpus and do not provide any significant value to the topics. On the other hand, there will be words that, due to their low frequency in the documents, are irrelevant. For this reason, pruning parameters of the maximum frequency of 80\% and minimum frequency of 0.1\% have been established. The pruning is performed based on the frequency of a term relative to the volume of all the words in the corpus. This task has been carried out using the \textit{CountVectorizer} of the \textit{Sklearn} package.
+
+    \item Similar to the minimum word size criteria, a minimum text size criterion has been established. The objective is to filter out all texts that have a number of words below a threshold, in order to filter out texts of a very general nature, full of stopwords, common words in the corpus, acronyms, etc. For this project a minimum text size of 5 words has been established.
+\end{enumerate}
+
+
+After applying the preprocessing steps to the \textit{401,214} papers in the corpus, only \textit{245,476} were usable. The majority were discarded because they did not satisfy the minimum text size requirement after processing. The rest were excluded because they had no abstract or they are wroten in other language. In the end, preprocessing eliminates many terms, and several documents do not keep the defined minimum size required.
+
+This task took \textit{5 days, 17 hours and 45 minutes} to complete with 160GB of RAM allocated. The distribution of the articles by date can be seen in image \ref{fig:Histogram_Available_Papers_Year}. In this image, it can be seen how 88\% of the papers belong to the period 2020-2022. This may affect the construction of the topics.
+
+In order to measure the impact of SARS-CoV-2 on the coronavirus literature, it is necessary to know which events and drugs are related to it. The drugs that appear on the living guidelines for COVID-19 set by WHO\footnote{https://www.who.int/publications/i/item/WHO-2019-nCoV-therapeutics-2022.4} will be used. This list contains recommendations for the use or non-use of different drugs and treatments. From this list we will take the different SARS-CoV-2 related drugs which will be used in the evaluation of the models.
+
+We collected the context-stopwords in a resource available from Zenodo\footnote{https://doi.org/10.5281/zenodo.7129601}. Some of the context-stopwords appear in the living guidelines for COVID-19 set by WHO. An example of this are the following words:
+
 \begin{itemize}
- \item BERTopic
- \item DTM
- \item D-ETM
+    \item The drug \textit{nirmatrelvir-ritonavir}. It appears nine times in the corpus documents. On April 22, 2022, WHO strongly recommended the use of this drug in patients with a non-severe disease with an increased risk of hospitalization\footnote{https://app.magicapp.org/\#/guideline/nBkO1E/rec/LwrMyv}. This word, which is important in this paper, has been removed because of its low appearance in the corpus. Perhaps, in future versions of the corpus, this word will appear more times and will not be removed.
+
+
+    \item Elements related to \textit{remdesivir}. On November 20, 2020, the WHO launches a conditional recommendation for the use of \textit{remdesivir} in patients with non-severe COVID-19 with increased risk of hospitalization\footnote{https://app.magicapp.org/\#/guideline/nBkO1E/rec/nBMO8R}. Although the list of filtered words does not include \textit{remdesivir} on its own, there are compound words with this term. In the word list, there are 40 terms with the word \textit{remdesivir}. From all of them, the most repeated word is \textit{remdesivir-tp}, a variation of \textit{remdesivir} that appears 15 times in the corpus documents.
+
+    \item The drug \textit{molnupiravir}. On March 3, 2022, the WHO issued a conditional recommendation for the use of this drug in patients with non-severe COVID-19 at increased risk of hospitalization (excluding pregnant or breastfeeding women and children)\footnote{https://app.magicapp.org/\#/guideline/nBkO1E/rec/E85WNb}. This drug is listed because it appears only 87 times in the corpus documents. However, it is possible that in future versions of the corpus this word will be dropped from the list if it appears in more papers.
+
 \end{itemize}
 
-Asumimos que cada tópico debe representar un concepto específico y que cada concepto está definido como las 15 palabras con mayor probabilidad para ese tópico. Observamos la coherencia de los tópicos generados en los últimos 5 años para conocer si la evolución de los tópicos es homogénea y estable. De esta forma podemos saber si los modelos generan modelos que evolucionan progresivamente y representan correctamente la colección de textos para elegir el mejor. Nos basaremos concretamente en las métricas CV y UMass (interpretabilidad y especificidad respectivamente).
+There are probably more terms in this list with an impact on this work. The problem is that the list is composed of 362,406 terms, which makes it difficult to analyze and evaluate the impact on the work.
+\newpage
+
+\subsection{Estrategia de selección de modelos}
+
+\textbf{El nivel de detalle de los tópicos probabilisticos creados usando modelos de tópicos dinámicos sobre el mismo corpus de publicaciones científicas del coronavirus, varía de acuerdo al algoritmo empleado.} Los modelos de tópicos dinámicos identificados en el estado de la cuestión que se compararán son: BERTopic, DTM, D-ETM.
+
+\textbf{Para evaluar un modelo de tópicos dinámicos generado sobre un corpus de artículos científicos desbalanceado hay que evaluar la calidad de los tópicos generados durante varios espacios temporales.} De esta forma, se analiza que los tópicos representan a la mayoría de artículos y no solo un determinado grupo. Para esto, hemos observado la coherencia de los tópicos generados en los últimos 5 años, para así, conocer si su evolución es homogénea y estable. Así, sabremos si los modelos generan tópicos que evolucionan progresivamente y representan correctamente la colección de textos. Para elegir al mejor nos basaremos concretamente en las métricas CV y UMass (interpretabilidad y especificidad respectivamente).
 
 \subsection{Análisis del modelo generado}
 
-Para etiquetar los diferentes tópicos hemos decidido tomar las palabras que han sido la top1 del tópico en cualquiera de los espacios temporales. Esta estrategia nos permite definir los tópicos mediante la o las palabras más importantes. Además, para poder medir y comparar la especificidad semántica de los tópicos se ha decidido utilizar la distancia semántica de las palabras de cada etiqueta. De esta forma, si un tópico es definido por una palabra, este tendría distancia cero y, por ende, sería una etiqueta perfecta. Mientras que, los tópicos que están definidos por una étiqueta con más de una palabra serán más plurales y serán menos específicos.
+Cada tópico representa un concepto específico. Este, está definido por las 15 palabras con mayor probabilidad para ese tópico. Para etiquetar los diferentes conceptos, hemos decidido tomar las palabras que han sido la top1 del tópico en cualquiera de los espacios temporales. Como el modelo óptimo de tópicos identifica conceptos independientes, no puede haber un tópico que contenga la misma etiqueta que otro.
 
-Sin embargo, mediante un estudio superficial de las etiquetas generadas se ha observado que muchas palabras son tendencias con alta relevancia en un espacio temporal y muy poco en los demás. Esto implica que los tópicos estan formados por tendencias. Por ello, la estrategia de etiquetado ha sido levemente modificada. Ahora, para que una palabra cuente como etiqueta, además de haber sido top1 en cualquier fecha ha de permanecer en el top5 palabras de forma estable durante todas las fechas. Además, si un tópico no cumple con palabras que satisfagan este requisito se asumirá que el tópico es demasiado volátil y no puede ser utilizado para estudiarlo.
+Mediante un estudio superficial de las etiquetas generadas, se ha observado que muchas palabras son tendencias. Que los conceptos estén etiquetados por palabras que han sido tendencia no es representativo, ya que un concepto cambia en el tiempo pero mantiene la misma idea. Por ello, la estrategia de etiquetado ha sido levemente modificada.
 
-Para contabilizar esto también hemos desarrollado una métrica de drop para ponderar la cantidad de tópicos volátiles respecto al total. De esta forma podemos comparar los diferentes modelos creados y cual genera tópicos más estables.
+Asumimos como ruido o tendencia aquellas palabras que aparecen en determinada fecha y desaparecen en otra. Con un gran impacto en el tópico en determinado punto. La duración de una palabra para ser considerada ruido o tendencia depende del tópico y del corpus. En este caso, nosotros definiremos las tendencias como aquellas palabras que son la top1 palabra del tópico en algún momento y no se mantienen en el top5 durante todos los momentos. Además, si un tópico no cumple con palabras que satisfagan este requisito, se asumirá que el tópico es volátil y no podrá ser utilizado para su estudio.
+
+Esta estrategia nos permite definir los tópicos de manera más precisa. Para demostrar esto, hemos medido y comparado la distancia semántica de las etiquetas generadas para cada tópico. A menor cantidad de palabras, más específico es el tópico, siendo en el mejor de los casos definido por una etiqueta con una única palabra. Además, a parte de medir la precisión del tópico, también es importante medir su estabilidad. Para medir esto, hemos contabilizado la cantidad de tópicos volátiles respecto al total. De esta forma, podemos comparar los diferentes modelos creados y cual genera tópicos más estables.
 
 
-Ante los resultados obtenidos y los tópicos tan variados se ha decidido incrementar el número de tópicos para observar si de esta manera se consiguen tópicos más específicos ya que se conoce que esto genera tópicos más concretos(Hay varios trabajos que nos lo confirman y el nuestro también lo demuestra).
 
 
-Observamos que DTM es el modelo que da mejor rendimiento, sin emabrgo entre las top 15 words de los tópicos no aparecen medicamentos. Además, observamos que aparecen el SARS, MERS y el SARS-CoV-2 en el mismo tópico, lo que impide que podamos relacionar los fármacos con cada enfermedad.
+
+%Esto implica que los tópicos estan formados por tendencias. 
+
+% y, ante los resultados obtenidos y los tópicos tan variados, se ha decidido incrementar el número de tópicos para observar si de esta manera se consiguen tópicos más específicos ya que se conoce que esto genera tópicos más concretos(Hay varios trabajos que nos lo confirman y el nuestro también lo demuestra). Ya que cuanto mayor es el número del tópico más específico son los conceptos que captura.
+
+
+%Observamos que DTM es el modelo que da mejor rendimiento, sin emabrgo entre las top 15 words de los tópicos no aparecen medicamentos. Además, observamos que aparecen el SARS, MERS y el SARS-CoV-2 en el mismo tópico, lo que impide que podamos relacionar los fármacos con cada enfermedad.
+
+\subsection{Ilustración de resultados}
+
+Podemos utilizar el modelo word2vec generado para ilustrar la disposición espacial de algunas palabras. Además, junto con UMAP (técnica de reducción de dimensionalidad), podemos expresar esta disposición en un espacio 2D.
+
+En primer lugar generar un punto para representar un tópico, este sería el centroide de las palabras que lo definen. En segundo lugar el centroide de su etiqueta.
+
+
+\section{Artículos}
+Se me han ocurrido dos ideas principales para escribir artículos, son trabajos diferentes NO excluyentes.
+
+\subsection{Estudio del corpus}
+Podríamos escribir un artículo sobre el estudio del corpus. Modelo con 100 tópicos y después de 200 tópicos para compararlos:
+\begin{itemize}
+	\item Mostrar los tópicos generados y sus etiquetas, estables e inestables. Quizás mostrar algunas palabras de algún tópico. 
+	\item Generar centroides para las 15 top palabras del tópico.
+	\item Generar centroides para las palabras de las etiquetas.
+	\item Dibujar los diferentes centroides y comparar la diferencia que hay.
+	\item Extraer los tópicos dominantes del corpus.
+	\item \textit{¿Analizar los artículos financiados? (estadísticas de cuantos son, en que tópicos se concentran, etc.)}
+	\item Coger un tópico concreto y analizar su evolución con el centroide y su trayectoria espacial.
+\end{itemize}
+
+Comparar los centroides y apoyar la teoría de que independientemente del número de tópicos la relevancia se mantiene a lo largo del tiempo. Esto implica que los tópicos que tengan centroides cecrca representan ideas similares. Buscar explicaciones con los centroides para la granularidad obtenida al establecer un mayor número de tópicos.
+
+\subsection{Estudio de los fármacos}
+Buscamos tratamientos y fármacos en los tópicos anteriores pero al ser tópicos con varias enfermedades nos hemos dado cuenta que la granularidad obtenida con la cantidad de tópicos no es suficiente para este objetivo. Por ello, vamos a generar modelos en el intervalo de fechas exclusivo del covid (diciembre 2019-actualidad).
+
+De las 100 palabras únicas que aparecen en el top de los tópicos, comparo contra drugs4covid cuales son medicamentos y cuales enfermedades. Saco los fármacos y enfermedades que salen en varios tópicos (varios contextos) y analizo su tendencia para cada uno. (Idealmente de forma agregada)
 
 
 
