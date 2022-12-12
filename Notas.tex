@@ -63,36 +63,38 @@ Data preprocessing is one of the most critical processes when generating topic m
 \end{enumerate}
 
 
-After applying the preprocessing steps to the \textit{401,214} papers in the corpus, only \textit{245,476} were usable. The majority were discarded because they did not satisfy the minimum text size requirement after processing. The rest were excluded because they had no abstract or they are wroten in other language. In the end, preprocessing eliminates many terms, and several documents do not keep the defined minimum size required.
+After applying the preprocessing steps to the 401,214 papers in the corpus, only 232,483 were usable. The majority were discarded because they did not satisfy the minimum text size requirement after processing. The rest were excluded because they had no abstract or they are wroten in other language. In the end, preprocessing eliminates many terms, and several documents do not keep the defined minimum size required.
 
-This task took \textit{5 days, 17 hours and 45 minutes} to complete with 160GB of RAM allocated. The distribution of the articles by date can be seen in image \ref{fig:Histogram_Available_Papers_Year}. In this image, it can be seen how 88\% of the papers belong to the period 2020-2022. This may affect the construction of the topics.
+This task took 5 days, 18 hours and 45 minutes to complete with 160GB of RAM allocated. The distribution of the articles by date can be seen in image \ref{fig:Histogram_Available_Papers_Year}. In this image, it can be seen how 88\% of the papers belong to the period 2020-2022. This may affect the construction of the topics.
 
 In order to measure the impact of SARS-CoV-2 on the coronavirus literature, it is necessary to know which events and drugs are related to it. The drugs that appear on the living guidelines for COVID-19 set by WHO\footnote{https://www.who.int/publications/i/item/WHO-2019-nCoV-therapeutics-2022.4} will be used. This list contains recommendations for the use or non-use of different drugs and treatments. From this list we will take the different SARS-CoV-2 related drugs which will be used in the evaluation of the models.
 
-We collected the context-stopwords in a resource available from Zenodo\footnote{https://doi.org/10.5281/zenodo.7129601}. Some of the context-stopwords appear in the living guidelines for COVID-19 set by WHO. An example of this are the following words:
+We collected the context-stopwords in a resource available from Zenodo\footnote{https://doi.org/10.5281/zenodo.7129601}. Some of the context-stopwords appear in the living guidelines for COVID-19 set by WHO and most of them are drugs or treatments. The list is composed of 362,406 terms, which makes it difficult to analyze and evaluate the impact on the work.
 
-\begin{itemize}
-    \item The drug \textit{nirmatrelvir-ritonavir}. It appears nine times in the corpus documents. On April 22, 2022, WHO strongly recommended the use of this drug in patients with a non-severe disease with an increased risk of hospitalization\footnote{https://app.magicapp.org/\#/guideline/nBkO1E/rec/LwrMyv}. This word, which is important in this paper, has been removed because of its low appearance in the corpus. Perhaps, in future versions of the corpus, this word will appear more times and will not be removed.
+\iffalse
+	\begin{itemize}
+    		\item The drug \textit{nirmatrelvir-ritonavir}. It appears nine times in the corpus documents. On April 22, 2022, WHO strongly recommended the use of this drug in patients with a non-severe disease with an increased risk of hospitalization\footnote{https://app.magicapp.org/\#/guideline/nBkO1E/rec/LwrMyv}. This word, which is important in this paper, has been removed because of its low appearance in the corpus. Perhaps, in future versions of the corpus, this word will appear more times and will not be removed.
 
 
-    \item Elements related to \textit{remdesivir}. On November 20, 2020, the WHO launches a conditional recommendation for the use of \textit{remdesivir} in patients with non-severe COVID-19 with increased risk of hospitalization\footnote{https://app.magicapp.org/\#/guideline/nBkO1E/rec/nBMO8R}. Although the list of filtered words does not include \textit{remdesivir} on its own, there are compound words with this term. In the word list, there are 40 terms with the word \textit{remdesivir}. From all of them, the most repeated word is \textit{remdesivir-tp}, a variation of \textit{remdesivir} that appears 15 times in the corpus documents.
+    		\item Elements related to \textit{remdesivir}. On November 20, 2020, the WHO launches a conditional recommendation for the use of \textit{remdesivir} in patients with non-severe COVID-19 with increased risk of hospitalization\footnote{https://app.magicapp.org/\#/guideline/nBkO1E/rec/nBMO8R}. Although the list of filtered words does not include \textit{remdesivir} on its own, there are compound words with this term. In the word list, there are 40 terms with the word \textit{remdesivir}. From all of them, the most repeated word is \textit{remdesivir-tp}, a variation of \textit{remdesivir} that appears 15 times in the corpus documents.
 
-    \item The drug \textit{molnupiravir}. On March 3, 2022, the WHO issued a conditional recommendation for the use of this drug in patients with non-severe COVID-19 at increased risk of hospitalization (excluding pregnant or breastfeeding women and children)\footnote{https://app.magicapp.org/\#/guideline/nBkO1E/rec/E85WNb}. This drug is listed because it appears only 87 times in the corpus documents. However, it is possible that in future versions of the corpus this word will be dropped from the list if it appears in more papers.
+    		\item The drug \textit{molnupiravir}. On March 3, 2022, the WHO issued a conditional recommendation for the use of this drug in patients with non-severe COVID-19 at increased risk of hospitalization (excluding pregnant or breastfeeding women and children)\footnote{https://app.magicapp.org/\#/guideline/nBkO1E/rec/E85WNb}. This drug is listed because it appears only 87 times in the corpus documents. However, it is possible that in future versions of the corpus this word will be dropped from the list if it appears in more papers.
 
-\end{itemize}
+	\end{itemize}
+\fi
 
-There are probably more terms in this list with an impact on this work. The problem is that the list is composed of 362,406 terms, which makes it difficult to analyze and evaluate the impact on the work.
 \newpage
 
 \subsection{Estrategia de selección de modelos}
 
-\textbf{El nivel de detalle de los tópicos probabilisticos creados usando modelos de tópicos dinámicos sobre el mismo corpus de publicaciones científicas del coronavirus, varía de acuerdo al algoritmo empleado.} Los modelos de tópicos dinámicos identificados en el estado de la cuestión que se compararán son: BERTopic, DTM, D-ETM.
+\textbf{El nivel de detalle de los tópicos probabilisticos creados usando modelos de tópicos dinámicos sobre el mismo corpus de publicaciones científicas del coronavirus, varía de acuerdo al algoritmo empleado.} Los modelos de tópicos dinámicos identificados en el estado de la cuestión que se compararán son: BERTopic, DTM y D-ETM.
 
 \textbf{Para evaluar un modelo de tópicos dinámicos generado sobre un corpus de artículos científicos desbalanceado hay que evaluar la calidad de los tópicos generados durante varios espacios temporales.} De esta forma, se analiza que los tópicos representan a la mayoría de artículos y no solo un determinado grupo. Para esto, hemos observado la coherencia de los tópicos generados en los últimos 5 años, para así, conocer si su evolución es homogénea y estable. Así, sabremos si los modelos generan tópicos que evolucionan progresivamente y representan correctamente la colección de textos. Para elegir al mejor nos basaremos concretamente en las métricas CV y UMass (interpretabilidad y especificidad respectivamente).
 
 \subsection{Análisis del modelo generado}
 
-Cada tópico representa un concepto específico. Este, está definido por las 15 palabras con mayor probabilidad para ese tópico. Para etiquetar los diferentes conceptos, hemos decidido tomar las palabras que han sido la top1 del tópico en cualquiera de los espacios temporales. Como el modelo óptimo de tópicos identifica conceptos independientes, no puede haber un tópico que contenga la misma etiqueta que otro.
+\subsubsection{Etiquetado de los tópicos}
+Cada tópico representa un concepto específico. Este, está definido por las 15 palabras con mayor probabilidad para ese tópico. Para etiquetar los diferentes conceptos, hemos decidido tomar las palabras que han sido la top1 del tópico en cualquiera de los espacios temporales. \textbf{Como el modelo óptimo de tópicos identifica conceptos independientes, no puede haber un tópico que contenga la misma etiqueta que otro.}
 
 Mediante un estudio superficial de las etiquetas generadas, se ha observado que muchas palabras son tendencias. Que los conceptos estén etiquetados por palabras que han sido tendencia no es representativo, ya que un concepto cambia en el tiempo pero mantiene la misma idea. Por ello, la estrategia de etiquetado ha sido levemente modificada.
 
@@ -101,8 +103,15 @@ Asumimos como ruido o tendencia aquellas palabras que aparecen en determinada fe
 Esta estrategia nos permite definir los tópicos de manera más precisa. Para demostrar esto, hemos medido y comparado la distancia semántica de las etiquetas generadas para cada tópico. A menor cantidad de palabras, más específico es el tópico, siendo en el mejor de los casos definido por una etiqueta con una única palabra. Además, a parte de medir la precisión del tópico, también es importante medir su estabilidad. Para medir esto, hemos contabilizado la cantidad de tópicos volátiles respecto al total. De esta forma, podemos comparar los diferentes modelos creados y cual genera tópicos más estables.
 
 
+\subsubsection{Propiedades de los tópicos}
+
+Los modelos de tópicos capturan los términos asociados a los conceptos más importantes existentes en una colección de artículos. La cantidad de tópicos a generar por el modelo determina la granularidad de los conceptos capturados y su relevancia. Pero, \textbf{independientemente de la cantidad de tópicos generados por el modelo, los conceptos relevantes siempre aparecen}. 
+
+Mientras que una mayor cantidad de tópicos permite capturar los conceptos más importantes con mayor detalle y permite que conceptos menos relevantes puedan ser capturados. Un modelo con menor cantidad de tópicos interpreta conceptos más generales y descarta los menos relevantes.
 
 
+\textbf{El tópico dinámico contextualiza el uso de un medicamento asociado a una enfermedad.
+}
 
 %Esto implica que los tópicos estan formados por tendencias. 
 
@@ -112,38 +121,47 @@ Esta estrategia nos permite definir los tópicos de manera más precisa. Para de
 %Observamos que DTM es el modelo que da mejor rendimiento, sin emabrgo entre las top 15 words de los tópicos no aparecen medicamentos. Además, observamos que aparecen el SARS, MERS y el SARS-CoV-2 en el mismo tópico, lo que impide que podamos relacionar los fármacos con cada enfermedad.
 
 \subsection{Ilustración de resultados}
+Aquí resumo una ideas que tengo para representar los tópicos y las hipótesis en el artículo. 
 
-Podemos utilizar el modelo word2vec generado para ilustrar la disposición espacial de algunas palabras. Además, junto con UMAP (técnica de reducción de dimensionalidad), podemos expresar esta disposición en un espacio 2D.
+Para ilustrar de forma gráfica los tópicos podemos utilizar el modelo word2vec generado para ilustrar la disposición espacial de algunas palabras. Junto a técnicas de reducción de dimensionalidad, podemos expresar esta disposición en un espacio 2D:
 
-En primer lugar generar un punto para representar un tópico, este sería el centroide de las palabras que lo definen. En segundo lugar el centroide de su etiqueta.
+\begin{itemize}
+	\item Con esta idea se puede representar un tópico mediante el centro de los vectores de las 15 palabras que lo definen.
+	\item De esta misma forma, podemos compararlo con el centro de las palabras de las etiquetas.
+	\item También se pueden comparar los centros de los tópicos entre los modelos con distinta configuración de tópicos.
 
+\end{itemize}
 
+Para mostrar los tópicos generados se podrían mostrar las etiquetas generadas y explicar con detalle lo de la estabilidad. Además, para algunos tópicos podrían extraerse algunas palabras (top5, top10, top15, ...) para mostrar un ejemplo. También se podría añadir el documento más representativo del tópico o incluso los documentos que representan el 75\% del tópico (pueden ser 1 o más).
+
+\newpage
 \section{Artículos}
 Se me han ocurrido dos ideas principales para escribir artículos, son trabajos diferentes NO excluyentes.
 
 \subsection{Estudio del corpus}
-Podríamos escribir un artículo sobre el estudio del corpus. Modelo con 100 tópicos y después de 200 tópicos para compararlos:
+Podríamos escribir un artículo sobre el estudio del corpus. Modelo con 100 tópicos y después de 200 tópicos para compararlos (también tengo de 300 y 400):
 \begin{itemize}
 	\item Mostrar los tópicos generados y sus etiquetas, estables e inestables. Quizás mostrar algunas palabras de algún tópico. 
-	\item Generar centroides para las 15 top palabras del tópico.
-	\item Generar centroides para las palabras de las etiquetas.
-	\item Dibujar los diferentes centroides y comparar la diferencia que hay.
-	\item Extraer los tópicos dominantes del corpus.
-	\item \textit{¿Analizar los artículos financiados? (estadísticas de cuantos son, en que tópicos se concentran, etc.)}
-	\item Coger un tópico concreto y analizar su evolución con el centroide y su trayectoria espacial.
+	\item Generar los centros para los embedding de las 15 top palabras del tópico, que se convertirá en el embedding del tópico.
+	\item Generar los centros para los embedding de las palabras de las etiquetas, que se convertirá en el embedding del tópico.
+	\item Dibujar los diferentes centros y comparar la diferencia que hay entre las diferentes configuraciones del modelo (el impacto del número de tópicos).
+	\item Extraer los tópicos dominantes del corpus. Para cada documento extraer el tópico al que tienen mayor probabilidad de pertenencia. Por mayoría simple, el tópico más repetido es el dominante del corpus.
+	\item \textit{¿Analizar los artículos financiados? (estadísticas de cuantos son, en que tópicos se concentran, etc.) Los documentos tienen un apartado de financiación, quizás puede ser interesante fijarnos en que tópicos tienen más artículos financiados.}
+	\item Coger un tópico concreto y analizar su evolución con su embedding y su trayectoria espacial. El centro calculado con la etiqueta es estático, pero el calculado mediante las topN palabras varía en función de estas. Por ello, podriamos mirar como evoluciona y definir un humbral de desplazamiento o hacerlo para algún caso concreto para explicar su evolución a lo largo del tiempo. Además, creo que esto puede servir para mostrar el impacto de las tendencias en el contenido del tópico.
 \end{itemize}
 
-Comparar los centroides y apoyar la teoría de que independientemente del número de tópicos la relevancia se mantiene a lo largo del tiempo. Esto implica que los tópicos que tengan centroides cecrca representan ideas similares. Buscar explicaciones con los centroides para la granularidad obtenida al establecer un mayor número de tópicos.
+Comparar los embeddings de los tópicos y apoyar la teoría de que independientemente del número de tópicos la relevancia se mantiene a lo largo del tiempo. Esto implica que los tópicos que tengan embeddings cecrca representan ideas similares. Buscar explicaciones con los embeddings para la granularidad obtenida al establecer un mayor número de tópicos.
 
 \subsection{Estudio de los fármacos}
 Buscamos tratamientos y fármacos en los tópicos anteriores pero al ser tópicos con varias enfermedades nos hemos dado cuenta que la granularidad obtenida con la cantidad de tópicos no es suficiente para este objetivo. Por ello, vamos a generar modelos en el intervalo de fechas exclusivo del covid (diciembre 2019-actualidad).
 
-De las 100 palabras únicas que aparecen en el top de los tópicos, comparo contra drugs4covid cuales son medicamentos y cuales enfermedades. Saco los fármacos y enfermedades que salen en varios tópicos (varios contextos) y analizo su tendencia para cada uno. (Idealmente de forma agregada)
+Primero buscamos elementos relacionados con los tratamientos en las etiquetas y analizamos el contenido de estos tópicos en busca de tratamientos. Ante las experiencias con los modelos previos, intuyo que no encontraremos nada, por lo que habrá que agrandar el espacio de busqueda, pasando de las top15 palabras a las top100.
+
+De esta forma, de las 100 top palabras que aparecen en el top de los tópicos, comparo contra drugs4covid cuales son medicamentos y cuales enfermedades. Saco los fármacos y enfermedades que salen en varios tópicos (varios contextos) y analizo su tendencia para cada uno (Idealmente de forma agregada). Además, podemos usar este sistema para evaluar si las etiquetas tienen un verdadero impacto en resumir el contenido del tópico. \textbf{¿Si apareciesen fármacos en tópicos con etiquetas que no tienen nada que ver con el tratamiento podría desestabilizarnos?} 
 
 
-
-
-\section{Artículos leidos}
+\newpage
+\section{Notas de los artículos leidos}
 
 Gran parte de los artículos son de autores chinos y tratan del análisis de opiniones. Muchos con financiación estatal china. Además, es un denominador común en las investigaciones aplicar estas técnicas sobre el texto recogido de diferentes redes sociales.
 
